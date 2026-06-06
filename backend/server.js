@@ -12,7 +12,7 @@ connectDB();
 const app = express();
 
 // =======================
-// CORS CONFIG (FIXED)
+// CORS CONFIG (PRODUCTION FIX)
 // =======================
 const allowedOrigins = [
   "http://localhost:5173",
@@ -21,19 +21,21 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
+    // allow tools like Postman or server-to-server requests
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.indexOf(origin) === -1) {
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
       return callback(new Error("CORS not allowed"), false);
     }
-
-    return callback(null, true);
   },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
 
-app.options("*", cors());
+// ❌ DO NOT USE app.options("*", cors()) in Node 24+
+// (this was causing Render crash)
 
 // =======================
 // Middleware
@@ -51,14 +53,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 
 // =======================
-// Test route
+// Health Check Route
 // =======================
 app.get("/", (req, res) => {
   res.send("Blog Backend is Running 🚀");
 });
 
 // =======================
-// Start server
+// Start Server
 // =======================
 const PORT = process.env.PORT || 5000;
 
