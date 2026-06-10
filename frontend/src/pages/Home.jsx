@@ -47,7 +47,7 @@ const Home = () => {
             color: "#111",
           }}
         >
-          Welcome to BlogSphere 🚀
+          Welcome to NiKan 🚀
         </h1>
 
         <p

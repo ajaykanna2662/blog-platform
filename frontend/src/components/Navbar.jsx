@@ -17,7 +17,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo">
-        BlogSphere
+        NiKan
       </div>
 
       <div className="nav-links">
